@@ -2,6 +2,13 @@
 #include <fcpw/aggregates/bvh.h>
 #ifdef FCPW_USE_ENOKI
     #include <fcpw/aggregates/mbvh.h>
+#else
+// make dummy types to make it compile
+template <int DIM>
+struct MsnchNode {};
+
+template <int DIM>
+struct MbvhNode {};
 #endif
 #include <map>
 
