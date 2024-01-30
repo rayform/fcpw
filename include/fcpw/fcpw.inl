@@ -565,6 +565,7 @@ inline void sortSoupPositions<3, SnchNode<3>, Triangle, SilhouetteEdge>(const st
     }
 }
 
+#ifdef FCPW_USE_ENOKI
 template<size_t DIM,
          typename BvhNodeType,
          typename PrimitiveType,
@@ -598,6 +599,7 @@ inline std::unique_ptr<Aggregate<DIM>> makeVectorizedAggregate(std::vector<Primi
 
     return mbvh;
 }
+#endif
 
 template<size_t DIM,
          typename NodeType,
