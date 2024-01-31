@@ -52,9 +52,16 @@ inline void Scene<2>::setObjectTypes(const std::vector<std::vector<PrimitiveType
                                                                         nLineSegmentObjects));
             nLineSegmentObjects++;
         }
+
+        if (objectTypes[i][0] == PrimitiveType::Triangle) {
+            sceneData->soupToObjectsMap[i].emplace_back(std::make_pair(ObjectType::Triangles,
+                                                                        nTriangleObjects));
+            nTriangleObjects++;
+        }
     }
 
     sceneData->lineSegmentObjects.resize(nLineSegmentObjects);
+    sceneData->triangleObjects.resize(nTriangleObjects);
 }
 
 template<>
@@ -122,15 +129,8 @@ inline void Scene<2>::setObjectLineSegmentCount(int nLineSegments, int objectInd
 template<size_t DIM>
 inline void Scene<DIM>::setObjectTriangleCount(int nTriangles, int objectIndex)
 {
-    std::cerr << "setObjectTriangleCount(): DIM: " << DIM << std::endl;
-    exit(EXIT_FAILURE);
-}
-
-template<>
-inline void Scene<3>::setObjectTriangleCount(int nTriangles, int objectIndex)
-{
     // resize soup indices
-    PolygonSoup<3>& soup = sceneData->soups[objectIndex];
+    PolygonSoup<DIM>& soup = sceneData->soups[objectIndex];
     int nIndices = (int)soup.indices.size();
     soup.indices.resize(nIndices + 3*nTriangles);
 
@@ -179,15 +179,8 @@ inline void Scene<2>::setObjectLineSegment(const int *indices, int lineSegmentIn
 template<size_t DIM>
 inline void Scene<DIM>::setObjectTriangle(const int *indices, int triangleIndex, int objectIndex)
 {
-    std::cerr << "setObjectTriangle(): DIM: " << DIM << std::endl;
-    exit(EXIT_FAILURE);
-}
-
-template<>
-inline void Scene<3>::setObjectTriangle(const int *indices, int triangleIndex, int objectIndex)
-{
     // update soup indices
-    PolygonSoup<3>& soup = sceneData->soups[objectIndex];
+    PolygonSoup<DIM>& soup = sceneData->soups[objectIndex];
     soup.indices[3*triangleIndex + 0] = indices[0];
     soup.indices[3*triangleIndex + 1] = indices[1];
     soup.indices[3*triangleIndex + 2] = indices[2];
@@ -809,7 +802,7 @@ inline void buildGeometricAggregates<3>(const AggregateType& aggregateType, bool
                 }
 
                 using SortTrianglePositionsFunc = std::function<void(const std::vector<SnchNode<3>>&,
-                                                                     std::vector<Triangle *>&,
+                                                                     std::vector<Triangle<3> *>&,
                                                                      std::vector<SilhouetteEdge *>&)>;
                 SortTrianglePositionsFunc sortTrianglePositions = std::bind(&sortSoupPositions<3, SnchNode<3>, Triangle, SilhouetteEdge>,
                                                                             std::placeholders::_1, std::placeholders::_2,
@@ -819,7 +812,7 @@ inline void buildGeometricAggregates<3>(const AggregateType& aggregateType, bool
 
             } else {
                 using SortTrianglePositionsFunc = std::function<void(const std::vector<BvhNode<3>>&,
-                                                                     std::vector<Triangle *>&,
+                                                                     std::vector<Triangle<3> *>&,
                                                                      std::vector<SilhouettePrimitive<3> *>&)>;
                 SortTrianglePositionsFunc sortTrianglePositions = std::bind(&sortSoupPositions<3, BvhNode<3>, Triangle, SilhouettePrimitive<3>>,
                                                                             std::placeholders::_1, std::placeholders::_2,

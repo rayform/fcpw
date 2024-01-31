@@ -4,16 +4,17 @@
 
 namespace fcpw {
 
-class Triangle: public GeometricPrimitive<3> {
+template <size_t DIM>
+class Triangle: public GeometricPrimitive<DIM> {
 public:
     // constructor
     Triangle();
 
     // returns bounding box
-    BoundingBox<3> boundingBox() const;
+    BoundingBox<DIM> boundingBox() const;
 
     // returns centroid
-    Vector3 centroid() const;
+    Vector<DIM> centroid() const;
 
     // returns surface area
     float surfaceArea() const;
@@ -22,16 +23,16 @@ public:
     float signedVolume() const;
 
     // returns normal
-    Vector3 normal(bool normalize=false) const;
+    Vector<DIM> normal(bool normalize=false) const;
 
     // returns the normalized normal based on the local parameterization
-    Vector3 normal(const Vector2& uv) const;
+    Vector<DIM> normal(const Vector2& uv) const;
 
     // returns barycentric coordinates
-    Vector2 barycentricCoordinates(const Vector3& p) const;
+    Vector2 barycentricCoordinates(const Vector<DIM>& p) const;
 
     // samples a random point on the geometric primitive and returns sampling pdf
-    float samplePoint(float *randNums, Vector2& uv, Vector3& p, Vector3& n) const;
+    float samplePoint(float *randNums, Vector2& uv, Vector<DIM>& p, Vector<DIM>& n) const;
 
     // returns texture coordinates
     Vector2 textureCoordinates(const Vector2& uv) const;
@@ -52,7 +53,7 @@ public:
                   bool recordOneHit=false) const;
 
     // finds closest point to sphere center
-    bool findClosestPoint(BoundingSphere<3>& s, Interaction<3>& i, bool recordNormal=false) const;
+    bool findClosestPoint(BoundingSphere<DIM>& s, Interaction<DIM>& i, bool recordNormal=false) const;
 
     // get and set index
     int getIndex() const { return pIndex; }
@@ -61,12 +62,12 @@ public:
     // members
     int indices[3];
     int pIndex;
-    const PolygonSoup<3> *soup;
+    const PolygonSoup<DIM> *soup;
 
 protected:
     // returns normalized vertex or edge normal if available;
     // otherwise computes normalized triangle normal
-    Vector3 normal(int vIndex, int eIndex) const;
+    Vector<DIM> normal(int vIndex, int eIndex) const;
 };
 
 } // namespace fcpw

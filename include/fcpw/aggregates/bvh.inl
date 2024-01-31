@@ -368,7 +368,7 @@ inline void Bvh<2, SnchNode<2>, LineSegment, SilhouetteVertex>::assignGeometricD
 }
 
 template<>
-inline void Bvh<3, SnchNode<3>, Triangle, SilhouetteEdge>::assignGeometricDataToNodes(const std::function<bool(float, int)>& ignoreSilhouette)
+inline void Bvh<3, SnchNode<3>, Triangle<3>, SilhouetteEdge>::assignGeometricDataToNodes(const std::function<bool(float, int)>& ignoreSilhouette)
 {
     // collect silhouette references
     Vector3 zero = Vector3::Zero();
